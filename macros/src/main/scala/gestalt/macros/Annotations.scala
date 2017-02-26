@@ -13,7 +13,6 @@ class main extends StaticAnnotation {
   }
 }
 
-/*
 class data extends StaticAnnotation {
   inline def apply(defn: Any): Any = meta {
     defn match {
@@ -32,7 +31,7 @@ class data extends StaticAnnotation {
     }
   }
 }
-
+/*
 class xsd(fileName: String) extends StaticAnnotation {
   inline def apply(defn: Any): Any = meta {
     defn match {
