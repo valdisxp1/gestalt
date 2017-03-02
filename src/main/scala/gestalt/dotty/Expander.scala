@@ -14,7 +14,7 @@ import scala.gestalt._
 
 object Expander {
   private object ExtractApply {
-    def unapply(tree: untpd.Tree): Option[(untpd.Tree, List[untpd.Tree], List[List[untpd.Tree]])] = tree match {
+    def unapply(tree: tpd.Tree): Option[(tpd.Tree, List[tpd.Tree], List[List[tpd.Tree]])] = tree match {
       case TypeApply(fun, targs) =>
         val Some((f, _, argss)) = unapply(fun)
         Some((f, targs, argss))
@@ -75,9 +75,9 @@ object Expander {
 
   /** Expand def macros */
   def expandDefMacro(tree: tpd.Tree)(implicit ctx: Context): untpd.Tree = tree match {
-    case ExtractApply(Select(prefix, method), targs, argss) =>
-      val prefixType = prefix.symbol.info.widen
-      val className = javaClassName(prefixType.classSymbol) + "$inline$"
+    case ExtractApply(sel @ Select(prefix, method), targs, argss) =>
+      val prefixType = prefix.tpe.widen
+      val className = javaClassName(sel.symbol.owner) + "$inline$"
       // reflect macros definition
       val moduleClass = ctx.classloader.loadClass(className)
       val module = moduleClass.getField("MODULE$").get(null)
