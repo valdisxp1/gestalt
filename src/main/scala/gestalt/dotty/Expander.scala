@@ -83,6 +83,9 @@ object Expander {
       impl.setAccessible(true)
 
       val trees  = new DottyToolbox() :: prefix :: targs ++ argss.flatten
+      println(s">>>impl.getParameters:${impl.getParameters.toList}")
+      println(s">>>actual parameters${trees}")
+      println(s">>>")
       impl.invoke(null, trees: _*).asInstanceOf[untpd.Tree]
     case _ =>
       tree
