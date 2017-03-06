@@ -1,5 +1,5 @@
 lazy val metaVersion = "1.5.0.585"
-lazy val dottyVersion = "0.2.2-SNAPSHOT"
+lazy val dottyVersion = "0.1.1-SNAPSHOT"
 
 lazy val common = Seq(
   resolvers ++= Seq(
@@ -17,7 +17,7 @@ lazy val gestaltSetting = Seq(
   libraryDependencies ++= Seq(
     "org.scalameta" %% "scalameta" % metaVersion,
     "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-    "me.fengy" % "dotty_2.11" % dottyVersion
+    "me.valdis.test" % "dotty_2.11" % dottyVersion
   ),
 
   credentials += Credentials(Path.userHome / ".sbt" / ".credentials"),
@@ -84,7 +84,7 @@ lazy val macrosSetting = Seq(
     // actually 2.11.5, published under ch.epfl.lamp)
     "ch.epfl.lamp" % "scala-library_2.11" % "0.1-SNAPSHOT",
     // Compiler on tool path
-    "me.fengy" % "dotty_2.11" % dottyVersion % "scala-tool"
+    "me.valdis.test" % "dotty_2.11" % dottyVersion % "scala-tool"
   ),
 
   // Bridge which allows REPL and compilation via dotty
