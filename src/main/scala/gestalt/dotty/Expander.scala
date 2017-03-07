@@ -42,8 +42,9 @@ object Expander {
       case UnApply(Select(Select(Apply(Select(Ident(nme.StringContext), nme.apply), List(Typed(SeqLiteral(parts, _), _))), name), nme.unapply), _, pats) =>
         (name.toString, parts, pats)
     }
+    println(s">>> treePos ${tree.pos}")
     val strs = for(Literal(Constant(v: String)) <- parts) yield v
-    expand(new DottyToolbox())(tag, strs, args, !isTerm)
+    expand(new DottyToolbox(tree.pos))(tag, strs, args, !isTerm)
   }
 
   /** Expand annotation macros */
