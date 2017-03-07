@@ -77,4 +77,8 @@ class DefMacroTest extends TestSuite {
     assert(scope.is[String]("hello"))
     assert(!scope.both[String, List[Int]]("hello"))
   }
+
+  test("strange quasiqoutes"){
+    assert(trees.five("dummy") == "dummy")
+  }
 }
