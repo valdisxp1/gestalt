@@ -38,3 +38,19 @@ object scope {
     q"$a.isInstanceOf[$S] && $a.isInstanceOf[$T]"
   }
 }
+
+object trees {
+ /* inline def some3: Option[Int] = meta {
+    q"Some(3)"
+  }
+*/
+  inline def five: Int = meta {
+    q"5"
+  }
+  /*inline def constant: Double = meta{
+    q"Math.Pi"
+  }*/
+  inline def ident(a: Any): Any = meta{
+    q"$a"
+  }
+}
