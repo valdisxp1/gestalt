@@ -40,20 +40,16 @@ object scope {
 }
 
 object trees {
- /* inline def some3: Option[Int] = meta {
+  inline def some3: Option[Int] = meta {
     q"Some(3)"
   }
-*/
-  inline def five(aTree: Any): Any = meta {
-    val five = q"5" //XXX five is an actual number 5, NOT the corresponding tree
-    println(s">>> FIVE $five ${five + 3}")
-    // just something so the macro will compile
-    q"$aTree"
+  inline def five: Int = meta {
+    q"5"
   }
-  /*inline def constant: Double = meta{
-    q"Math.Pi"
-  }*/
-  inline def ident(a: Any): Any = meta{
+  inline def pi: Double = meta {
+    q"Math.PI"
+  }
+  inline def ident(a: Any): Any = meta {
     q"$a"
   }
 }
