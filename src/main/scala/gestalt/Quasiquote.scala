@@ -74,7 +74,18 @@ class Quasiquote(val t: Toolbox, val toolboxName: String) {
     }
 
     // compiler stupidity
-    quote.lift(mTree).asInstanceOf[Tree]
+    val result = quote.lift(mTree).asInstanceOf[Tree]
+    def dumpPos(a : Any) = {
+      a match {
+        case tree : _root_.dotty.tools.dotc.ast.Positioned => tree.pos
+        case other => s"?${other.getClass.getCanonicalName}"
+      }
+    }
+    println(s">>> $code, ${unquotes.map{x => x -> dumpPos(x)}}")
+    println(s">>> mTree: $mTree, ${mTree.structure}, pos: ${mTree.pos}")
+    println(s">>> result: $result, pos: ${dumpPos(result)}")
+    println(s">>> ")
+    result
   }
 
   /** Resugar tree into string interpolation */
