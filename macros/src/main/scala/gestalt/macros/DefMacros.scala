@@ -1,4 +1,5 @@
 import scala.gestalt._
+import scala.runtime.AbstractFunction1
 
 object plusObject {
   inline def apply(a: Int, b: Int): Int = meta {
@@ -11,6 +12,17 @@ object plusObject {
   inline def curried(a:Int)(b: Int): Int = meta {
     q"$a + $b"
   }
+
+  inline def curried2(a:Int): Int => Int = meta {
+    q"_root_.plusObject.curried2Inner($a,b)"
+  }
+
+  class curried2Inner(val a: Int) extends AbstractFunction1[Int, Int] {
+    inline def apply(b: Int) = meta {
+      q"$this.a + $b"
+    }
+  }
+
   inline def poly(a: Any, b: Int): Int = meta {
     a match {
       case toolbox.Lit(i:Int) => q"$a + $b"
