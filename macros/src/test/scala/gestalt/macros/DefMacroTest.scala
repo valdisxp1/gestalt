@@ -104,11 +104,18 @@ class DefMacroTest extends TestSuite {
     assert(scope.mapTest() == 30)
   }
 
-  test("macro defined in a trait") {
+  test("defined in a trait") {
     import Inheritance._
     assert(new A(3).plus1() == 4)
     assert(new A(-1).plus1() == 0)
     assert(B.plus1() == 9001)
     assert(a39.plus1() == 40)
+  }
+
+  test("defined in an anonymous class") {
+    import anonymous._
+//    assert(a.toString() == "abc")
+//    assert(a1.toString() == "abc")
+    assert(b.calculate() == 6)
   }
 }

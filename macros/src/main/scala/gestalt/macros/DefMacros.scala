@@ -90,3 +90,28 @@ object Inheritance {
     def a = 39
   }
 }
+
+object anonymous {
+ /* val a = new {
+    override inline def toString() = meta {
+      toolbox.Lit("abc")
+    }
+  }
+
+  val a1 = new AnyRef {
+    override inline def toString() = meta {
+      toolbox.Lit("abc")
+    }
+  }*/
+
+  trait B {
+    def calculate(): Int = 1
+  }
+
+  val b = new B {
+    override inline def calculate() = meta {
+      val result = (1 to 3).sum
+      toolbox.Lit(result)
+    }
+  }
+}
