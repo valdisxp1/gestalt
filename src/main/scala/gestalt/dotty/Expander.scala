@@ -92,6 +92,13 @@ object Expander {
       impl.setAccessible(true)
 
       val trees  = new TypeToolbox(tree.pos) :: prefix :: targs ++ argss.flatten
+      if (impl.getParameterCount != trees.size) {
+        val msg = s"The parameter count does not match.\n" +
+          s"Expected parameters: ${impl.getParameters.mkString("(", ",", ")")}\n" +
+          s"Actual:${trees.mkString("(", ",", ")")}"
+        println(">>> "+msg)
+        ctx.error(msg, tree.pos)
+      }
       impl.invoke(null, trees: _*).asInstanceOf[untpd.Tree]
     case _ =>
       ctx.warning(s"Unknown macro expansion: $tree")
