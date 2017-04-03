@@ -470,6 +470,13 @@ class TypeToolbox(enclosingPosition: Position)(implicit ctx: Context) extends To
     }
   }
 
+  object Ident extends IdentHelper {
+    def unapply(tree: Tree): Option[String] = tree match {
+      case c.Ident(name) => Some(name.toString())
+      case _ => None
+    }
+  }
+
   object Apply extends ApplyHelper {
     def unapply(tree: Tree): Option[(Tree, Seq[Tree])] = tree match {
       case c.Apply(fun, args) => Some((fun, args))

@@ -268,6 +268,11 @@ trait TypeToolbox extends Toolbox { t =>
     def unapply(tree: Tree): Option[Any]
   }
 
+  val Ident: IdentHelper
+  trait IdentHelper {
+    def unapply(tree: Tree): Option[String]
+  }
+
   val Apply: ApplyHelper
   trait ApplyHelper {
     def unapply(tree: Tree): Option[(Tree, Seq[Tree])]
