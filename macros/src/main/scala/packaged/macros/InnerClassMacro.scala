@@ -1,5 +1,6 @@
 package packaged.macros
 
+import scala.gestalt._
 import scala.gestalt.defs._
 
 class InnerClassMacro {
