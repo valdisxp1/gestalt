@@ -32,7 +32,9 @@ object plusObject {
         println("!!!2 "+items)
         items.reduceLeft((a, b) => q"$a + $b")
       case other =>
-        q"$items.reduce((a:Int,b:Int)=> a + b)"
+        val res =q"$items.reduce((a:Int,b:Int)=> a + b)"
+        println("!!!3 " + res)
+        q"1"
     }
   }
 }
