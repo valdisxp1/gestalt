@@ -1,6 +1,6 @@
 package packaged
 
-import scala.gestalt._
+import scala.gestalt.defs._
 
 package object macros {
   inline def plus(a: Int, b: Int): Int = meta {

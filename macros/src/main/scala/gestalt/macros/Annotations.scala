@@ -1,7 +1,7 @@
 import scala.annotation.StaticAnnotation
 import scala.collection.immutable.Seq
 
-import scala.gestalt._
+import scala.gestalt.annotations._
 
 class main extends StaticAnnotation {
   inline def apply(defn: Any): Any = meta {

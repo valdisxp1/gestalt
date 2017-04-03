@@ -1,4 +1,4 @@
-import scala.gestalt._
+import scala.gestalt.defs._
 
 object plusObject {
   inline def apply(a: Int, b: Int): Int = meta {
