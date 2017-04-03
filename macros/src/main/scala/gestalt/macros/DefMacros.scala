@@ -22,10 +22,14 @@ object plusObject {
   }
 
   inline def varargs(items: Int*): Int = meta {
-    //TODO somehow read the varargs value
-//    items.reduceLeft((a,b)=>q"$a + $b")
     println(">>>"+items)
-    q"1"
+    items match {
+      case q"Seq(..${items: Seq[toolbox.Tree]})" =>
+        println("!!!"+items)
+        items.reduceLeft((a, b) => q"$a + $b")
+      case other =>
+        q"$items.reduce((a,b)=> a + b)"
+    }
   }
 }
 
