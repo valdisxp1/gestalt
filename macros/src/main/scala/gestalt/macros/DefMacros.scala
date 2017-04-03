@@ -26,7 +26,10 @@ object plusObject {
     println(">>>"+items)
     items match {
       case q"Seq(..${items: Seq[toolbox.Tree]})" =>
-        println("!!!"+items)
+        println("!!!1 "+items)
+        items.reduceLeft((a, b) => q"$a + $b")
+      case q"Seq[$_](..${items: Seq[toolbox.Tree]})" =>
+        println("!!!2 "+items)
         items.reduceLeft((a, b) => q"$a + $b")
       case other =>
         q"$items.reduce((a:Int,b:Int)=> a + b)"

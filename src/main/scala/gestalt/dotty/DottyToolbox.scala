@@ -493,14 +493,13 @@ class TypeToolbox(enclosingPosition: Position)(implicit ctx: Context) extends To
     }
   }
 
-  /*
   object ApplyType extends ApplyTypeHelper {
     def unapply(tree: Tree): Option[(Tree, Seq[TypeTree])] = tree match {
       case c.TypeApply(fun, args) => Some((fun, args))
       case _ => None
     }
   }
-
+  /*
   object Assign extends AssignHelper {
     def unapply(tree: Tree): Option[(Tree, Tree)] = tree match {
       case c.Assign(lhs, rhs) => Some((lhs, rhs))
