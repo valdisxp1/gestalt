@@ -499,6 +499,14 @@ class TypeToolbox(enclosingPosition: Position)(implicit ctx: Context) extends To
       case _ => None
     }
   }
+
+  object Select extends SelectHelper {
+    def unapply(tree: Tree): Option[(Tree, String)] = tree match {
+      case c.Select(qualifier, name) => Some((qualifier, name.toString()))
+      case _ => None
+    }
+  }
+
   /*
   object Assign extends AssignHelper {
     def unapply(tree: Tree): Option[(Tree, Tree)] = tree match {

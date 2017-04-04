@@ -288,6 +288,11 @@ trait TypeToolbox extends Toolbox { t =>
     def unapply(tree: Tree): Option[(Tree, Seq[TypeTree])]
   }
 
+  val Select: SelectHelper
+  trait SelectHelper {
+    def unapply(tree: Tree): Option[(Tree, String)]
+  }
+
   // helper
   object ApplySeq {
     def unapply(call: Tree):  Option[(Tree, Seq[Seq[Tree]])] = {
