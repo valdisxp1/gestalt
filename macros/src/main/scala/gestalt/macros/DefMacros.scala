@@ -24,17 +24,17 @@ object plusObject {
   inline def varargs(tped: Int*): Int = meta {
     val q"$items: $_" = tped
     println(">>>"+items)
+    println(">>>2 "+q"Seq[Int].apply(1,2,3)")
+    println(">>>2 "+q"Seq[Int](1,2,3)")
     items match {
-      case q"Seq(..${items: Seq[toolbox.Tree]})" =>
+      case q"Seq[$_].apply(..${items: Seq[toolbox.Tree]})" =>
         println("!!!1 "+items)
         items.reduceLeft((a, b) => q"$a + $b")
       case q"Seq[$_](..${items: Seq[toolbox.Tree]})" =>
         println("!!!2 "+items)
         items.reduceLeft((a, b) => q"$a + $b")
       case other =>
-        val res =q"$items.reduce((a:Int,b:Int)=> a + b)"
-        println("!!!3 " + res)
-        q"1"
+        q"$items.reduce((a:Int,b:Int)=> a + b)"
     }
   }
 }
