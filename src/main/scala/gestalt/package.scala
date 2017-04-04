@@ -1,10 +1,10 @@
 package scala
 
 package object gestalt {
-  private trait helper {
+  trait helper[T <: Toolbox] {
     /** The dummy Toolbox for type checking
       */
-    val toolbox: Toolbox
+    val toolbox: T = ???
 
     /** The marker for meta block to highlight the different semantics
       */
@@ -30,17 +30,11 @@ package object gestalt {
 
   }
 
-  object defs extends helper {
-    val toolbox: TypeToolbox = null
-  }
+  object defs extends helper[TypeToolbox]
 
-  object annotations extends helper {
-    val toolbox: StructToolbox = null
-  }
+  object annotations extends helper[StructToolbox]
 
-  object common extends helper {
-    val toolbox: Toolbox = null
-  }
+  object common extends helper[Toolbox]
 
   /** Quasiquote implementation based on standard constructors and extractors
    *
