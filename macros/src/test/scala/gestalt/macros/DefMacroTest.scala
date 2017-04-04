@@ -55,6 +55,10 @@ class DefMacroTest extends TestSuite {
     val three = 3
     assert(new plus2(3)(5) == 8)
     assert(new plus2(three * 1)(5) == 8)
+    case class IntList(ints: Int*){
+      def sum = ints.sum
+    }
+    assert(new plus2(IntList(2,1).sum)(5) == 8)
     assert(new plus2(Seq(2,1).sum)(5) == 8)
   }
 
