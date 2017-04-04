@@ -38,6 +38,10 @@ package object gestalt {
     val toolbox: StructToolbox = null
   }
 
+  object common extends helper {
+    val toolbox: Toolbox = null
+  }
+
   /** Quasiquote implementation based on standard constructors and extractors
    *
    *  This method is intended to be reflectively called by the compiler
