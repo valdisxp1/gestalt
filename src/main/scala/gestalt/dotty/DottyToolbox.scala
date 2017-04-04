@@ -488,7 +488,7 @@ class TypeToolbox(enclosingPosition: Position)(implicit ctx: Context) extends To
     def unapply(tree: Tree): Option[(Tree, Seq[Tree])] = tree match {
       case c.Apply(fun, Seq(c.Typed(c.SeqLiteral(args, _), _))) => Some((fun, args))
       case c.Apply(fun, args) => Some((fun, args))
-      case c.SeqLiteral(items, _)=> Some((c.Ident("Seq".toTermName), items))
+      case c.SeqLiteral(items, elemtpt) => Some((c.Select(c.TypeApply(c.Ident("Seq".toTermName), List(elemtpt)), "apply".toTermName), items))
       case _ => None
     }
   }
