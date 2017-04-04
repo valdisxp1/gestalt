@@ -15,7 +15,7 @@ class DefMacroTest extends TestSuite {
     val five = 5
     assert(plusObject.varargs(1, 1 + 1, five) == 8)
     assert(plusObject.varargs(1, 2, 5) == 8)
-//    assert(plusObject.varargs(Seq(1, 2, 5):_*) == 8)
+    assert(plusObject.varargs(Seq(1, 2, 5):_*) == 8)
     val ints = Seq(1, 2, 5)
     assert(plusObject.varargs(ints:_*) == 8)
     assert(plusObject.varargs(3, 5) == 8)
@@ -55,6 +55,7 @@ class DefMacroTest extends TestSuite {
     val three = 3
     assert(new plus2(3)(5) == 8)
     assert(new plus2(three * 1)(5) == 8)
+    assert(new plus2(Seq(2,1).sum)(5) == 8)
   }
 
   test("plus2 on code block") {
