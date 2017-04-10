@@ -33,7 +33,7 @@ object plusObject {
   }
 
   def varargs2(items: Int*): Int = meta {
-    val helper = new HelperExample2(toolbox)
+    val helper = new HelperExample2[toolbox.type](toolbox)
     import helper._
     items match {
       case Varargs(Right(items)) =>

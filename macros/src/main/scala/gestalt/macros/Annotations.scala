@@ -7,12 +7,13 @@ import scala.gestalt._
 class main extends StaticAnnotation {
   def apply(defn: Any): Any = meta {
     val q"$mods object $name { ..$stats }" = defn
-    val helper = new HelperExample(toolbox)
+    val helper = new HelperExample[toolbox.type](toolbox)
     import helper._
+    val array = toolbox.ValDef(toolbox.emptyMods, "array", None, intArrayLit(1, 3, 3, 7))
     val main = q"""
-      def stub(args: Any): Any = { ..$stats }
-      val array = ${intArrayLit(1,2,4)}
+      def stub(args: Any): Any = { ..${array +: stats} }
     """
+
 
     q"$mods object $name { $main }"
   }
