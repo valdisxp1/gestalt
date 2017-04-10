@@ -1,4 +1,4 @@
-import gestalt.HelperExample
+import example.helpers.HelperExample
 
 import scala.annotation.StaticAnnotation
 import scala.collection.immutable.Seq

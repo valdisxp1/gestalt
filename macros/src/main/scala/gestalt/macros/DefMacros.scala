@@ -1,4 +1,4 @@
-import gestalt.HelperExample2
+import example.helpers.HelperExample2
 
 import scala.gestalt._
 
