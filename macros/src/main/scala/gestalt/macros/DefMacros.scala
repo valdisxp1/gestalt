@@ -1,3 +1,5 @@
+import gestalt.HelperExample2
+
 import scala.gestalt._
 
 object plusObject {
@@ -26,6 +28,17 @@ object plusObject {
       case toolbox.SeqLiteral(items: Seq[toolbox.Tree]) =>
         items.reduceLeft((a, b) => q"$a + $b")
       case q"$items: $_" =>
+        q"$items.reduce((a:Int,b:Int)=> a + b)"
+    }
+  }
+
+  def varargs2(items: Int*): Int = meta {
+    val helper = new HelperExample2(toolbox)
+    import helper._
+    items match {
+      case Varargs(Right(items)) =>
+        items.reduceLeft((a, b) => q"$a + $b")
+      case Varargs(Left(items)) =>
         q"$items.reduce((a:Int,b:Int)=> a + b)"
     }
   }

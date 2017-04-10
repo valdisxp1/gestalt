@@ -1,14 +1,19 @@
+import gestalt.HelperExample
+
 import scala.annotation.StaticAnnotation
 import scala.collection.immutable.Seq
-
 import scala.gestalt._
 
 class main extends StaticAnnotation {
   def apply(defn: Any): Any = meta {
     val q"$mods object $name { ..$stats }" = defn
+    val helper = new HelperExample(toolbox)
+    import helper._
     val main = q"""
       def stub(args: Any): Any = { ..$stats }
+      val array = ${intArrayLit(1,2,4)}
     """
+
     q"$mods object $name { $main }"
   }
 }
