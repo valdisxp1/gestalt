@@ -462,7 +462,19 @@ class TypeToolbox(enclosingPosition: Position)(implicit ctx: Context) extends To
   def =:=(tp1: Type, tp2: Type): Boolean = ???
   def <:<(tp1: Type, tp2: Type): Boolean = ???
   def typeOf(path: String): Type = ???
-  def isClass(tp: Types.Type) = tp.classSymbol != NoSymbol
+  def isClass(tp: Type) = tp.classSymbol != NoSymbol
+
+  object CompanionType extends CompanionTypeHelper {
+    def unapply(tp: Type): Option[Type] = {
+      for {
+        tp <- Some(tp)
+        classSymbol = tp.classSymbol
+        if classSymbol != NoSymbol
+        companionModule = classSymbol.companionModule
+        if companionModule != NoSymbol
+      } yield companionModule.info
+    }
+  }
 
   object Ascribe extends AscribeHelper {
     def unapply(tree: Tree): Option[(Tree, TypeTree)] = tree match {

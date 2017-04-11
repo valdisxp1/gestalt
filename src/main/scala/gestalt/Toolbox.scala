@@ -268,9 +268,14 @@ trait TypeToolbox extends Toolbox { t =>
     def unapply(tp: Type): Boolean = isClass(tp)
   }
 
+  val CompanionType: CompanionTypeHelper
+  trait CompanionTypeHelper {
+    def unapply(tp: Type): Option[Type]
+  }
+
   val Ascribe: AscribeHelper
   trait AscribeHelper {
-    def unapply(arg: Tree): Option[(Tree, TypeTree)]
+    def unapply(tree: Tree): Option[(Tree, TypeTree)]
   }
 
   val SeqLiteral: SeqLiteralHelper
