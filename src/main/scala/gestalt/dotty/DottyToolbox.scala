@@ -14,6 +14,7 @@ import d.modsDeco
 import util.Positions
 import Positions.Position
 import dotty.tools.dotc.core.Symbols.NoSymbol
+import dotty.tools.dotc.core.{Types => t}
 
 import scala.collection.mutable.ListBuffer
 
@@ -474,6 +475,21 @@ class TypeToolbox(enclosingPosition: Position)(implicit ctx: Context) extends To
       companionModule = classSymbol.companionModule
       if companionModule != NoSymbol
     } yield companionModule.info
+  }
+
+  private def symbolToDeclaration(symbol: Symbols.Symbol): Tree = {
+    println(">>>" + symbol)
+    DefDecl(emptyMods, symbol.name.toString(), Nil /* symbol.typeParams)*/, Nil, null)
+  }
+
+  def declarations(tp: Type): Seq[Tree] = {
+    for {
+      tp <- Seq(tp)
+      classSymbol = tp.classSymbol
+      if classSymbol != NoSymbol
+      classInfo = classSymbol.info.asInstanceOf[t.ClassInfo]
+      symbol <- classInfo.decls.toList
+    } yield symbolToDeclaration(symbol)
   }
 
   object Ascribe extends AscribeHelper {

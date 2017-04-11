@@ -263,6 +263,7 @@ trait TypeToolbox extends Toolbox { t =>
     def <:<(tp2: Type) = t.<:<(tp1, tp2)
     def isClass = t.isClass(tp1)
     def companion = t.companionType(tp1)
+    def declarations = t.declarations(tp1)
   }
 
   def typeOf(tree: Tree): Type
@@ -273,6 +274,7 @@ trait TypeToolbox extends Toolbox { t =>
 
   def isClass(tp: Type): Boolean
   def companionType(tp: Type): Option[Type]
+  def declarations(tp: Type): Seq[Tree]
 
   val Ascribe: AscribeHelper
   trait AscribeHelper {

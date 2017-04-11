@@ -18,7 +18,7 @@ object JsonMacros {
       val companion = tpe.companion.getOrElse{
         toolbox.fatal("fail", q"null")
       }
-      println(">>>" + companion)
+      val declarations = companion.declarations
     } else {
       toolbox.fatal("fail", q"null")
     }
