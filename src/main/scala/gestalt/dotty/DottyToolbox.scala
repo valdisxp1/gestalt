@@ -459,21 +459,21 @@ class StructToolbox(enclosingPosition: Position)(implicit ctx: Context) extends 
 class TypeToolbox(enclosingPosition: Position)(implicit ctx: Context) extends Toolbox(enclosingPosition)(ctx) with TTbox {
   type Type = Types.Type
 
+  def typeOf(tree: Tree): Type = tree.tpe
+
   def =:=(tp1: Type, tp2: Type): Boolean = ???
   def <:<(tp1: Type, tp2: Type): Boolean = ???
   def typeOf(path: String): Type = ???
   def isClass(tp: Type) = tp.classSymbol != NoSymbol
 
-  object CompanionType extends CompanionTypeHelper {
-    def unapply(tp: Type): Option[Type] = {
-      for {
-        tp <- Some(tp)
-        classSymbol = tp.classSymbol
-        if classSymbol != NoSymbol
-        companionModule = classSymbol.companionModule
-        if companionModule != NoSymbol
-      } yield companionModule.info
-    }
+  def companionType(tp: Type): Option[Type] = {
+    for {
+      tp <- Some(tp)
+      classSymbol = tp.classSymbol
+      if classSymbol != NoSymbol
+      companionModule = classSymbol.companionModule
+      if companionModule != NoSymbol
+    } yield companionModule.info
   }
 
   object Ascribe extends AscribeHelper {

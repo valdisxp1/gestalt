@@ -12,12 +12,15 @@ object JsonMacros {
   }
 
   def format[T]() = meta {
-    val tpe: toolbox.TypeTree = T
-    tpe match {
-//      case t.IsTrait =>
-      case toolbox.IsClass =>
-//      case t.IsObject =>
-      case _ => toolbox.error("fail",q"null")
+    val tpe = toolbox.typeOf(T)
+    import toolbox.TypeOps
+    if (tpe.isClass) {
+      val companion = tpe.companion.getOrElse{
+        toolbox.fatal("fail", q"null")
+      }
+      println(">>>" + companion)
+    } else {
+      toolbox.fatal("fail", q"null")
     }
     q"null"
   }

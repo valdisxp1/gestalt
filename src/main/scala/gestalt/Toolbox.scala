@@ -110,6 +110,10 @@ trait Toolbox {
 
   // diagnostics - the implementation takes the position from the tree
   def error(message: String, tree: Tree): Unit
+  def fatal(message: String, tree: Tree): Nothing = {
+    error(message, tree)
+    throw new Exception(message)
+  }
 
   // modifiers
   def emptyMods: Mods
@@ -250,28 +254,25 @@ trait StructToolbox extends Toolbox {
 /** TypeToolbox defines extractors for inspecting expression trees as well as check types of trees
  */
 trait TypeToolbox extends Toolbox { t =>
-  type Tree <: { def tpe: Type }
+  type Tree
   type Type
 
   // type operations
   implicit class TypeOps(val tp1: Type) {
     def =:=(tp2: Type) = t.=:=(tp1, tp2)
     def <:<(tp2: Type) = t.<:<(tp1, tp2)
+    def isClass = t.isClass(tp1)
+    def companion = t.companionType(tp1)
   }
+
+  def typeOf(tree: Tree): Type
 
   def =:=(tp1: Type, tp2: Type): Boolean
   def <:<(tp1: Type, tp2: Type): Boolean
   def typeOf(path: String): Type
+
   def isClass(tp: Type): Boolean
-
-  object IsClass {
-    def unapply(tp: Type): Boolean = isClass(tp)
-  }
-
-  val CompanionType: CompanionTypeHelper
-  trait CompanionTypeHelper {
-    def unapply(tp: Type): Option[Type]
-  }
+  def companionType(tp: Type): Option[Type]
 
   val Ascribe: AscribeHelper
   trait AscribeHelper {
