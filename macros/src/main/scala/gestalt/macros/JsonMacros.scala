@@ -1,5 +1,3 @@
-package gestalt.macros
-
 import scala.gestalt._
 
 object JsonMacros {
