@@ -1,11 +1,10 @@
 package scala.gestalt.dotty
 
-import scala.gestalt.{Toolbox => Tbox, StructToolbox => STbox, TypeToolbox => TTbox, flags}
+import scala.gestalt.{flags, StructToolbox => STbox, Toolbox => Tbox, TypeToolbox => TTbox}
 import scala.collection.immutable.Seq
-
 import dotty.tools.dotc._
 import core._
-import ast.{ untpd => d, Trees => c }
+import ast.{Trees => c, untpd => d}
 import StdNames._
 import NameOps._
 import Contexts._
@@ -14,6 +13,7 @@ import Constants._
 import d.modsDeco
 import util.Positions
 import Positions.Position
+import dotty.tools.dotc.core.Symbols.NoSymbol
 
 import scala.collection.mutable.ListBuffer
 
@@ -462,6 +462,7 @@ class TypeToolbox(enclosingPosition: Position)(implicit ctx: Context) extends To
   def =:=(tp1: Type, tp2: Type): Boolean = ???
   def <:<(tp1: Type, tp2: Type): Boolean = ???
   def typeOf(path: String): Type = ???
+  def isClass(tp: Types.Type) = tp.classSymbol != NoSymbol
 
   object Ascribe extends AscribeHelper {
     def unapply(tree: Tree): Option[(Tree, TypeTree)] = tree match {

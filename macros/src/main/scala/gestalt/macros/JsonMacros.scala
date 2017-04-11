@@ -12,6 +12,13 @@ object JsonMacros {
   }
 
   def format[T]() = meta {
+    val tpe: toolbox.TypeTree = T
+    tpe match {
+//      case t.IsTrait =>
+      case toolbox.IsClass =>
+//      case t.IsObject =>
+      case _ => toolbox.error("fail",q"null")
+    }
     q"null"
   }
 }

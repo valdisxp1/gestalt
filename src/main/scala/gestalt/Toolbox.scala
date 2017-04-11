@@ -262,6 +262,11 @@ trait TypeToolbox extends Toolbox { t =>
   def =:=(tp1: Type, tp2: Type): Boolean
   def <:<(tp1: Type, tp2: Type): Boolean
   def typeOf(path: String): Type
+  def isClass(tp: Type): Boolean
+
+  object IsClass {
+    def unapply(tp: Type): Boolean = isClass(tp)
+  }
 
   val Ascribe: AscribeHelper
   trait AscribeHelper {
