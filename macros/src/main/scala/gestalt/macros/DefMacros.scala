@@ -119,6 +119,14 @@ object trees {
          def hasNext = false
          def next() = ???
        }"""
+    /*
+    should be
+    New(Template(DefDef(<init>,List(),List(),TypeTree,EmptyTree),
+      List(AppliedTypeTree(Ident(Iterator),List(Ident(Nothing)))),
+       ValDef(_,EmptyTree,EmptyTree),List(DefDef(hasNext,List(),List(),TypeTree,Literal(Constant(false))),
+       DefDef(next,List(),List(List()),TypeTree,Ident(???)))
+    ))
+    */
     println(">>>1 "+tree)
     tree
   }
