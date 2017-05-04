@@ -119,7 +119,7 @@ object trees {
          def hasNext = false
          def next() = ???
        }"""
-    println(">>>1 "+tree)
+    println(">>> 1 "+tree)
     tree
   }
 }
