@@ -98,6 +98,11 @@ object trees {
   def some3(): Option[Int] = meta {
     q"Some(3)"
   }
+  def someExplicit3(): Option[Int] = meta {
+    val tree = q"new Some[Int](3)"
+    println(">>> 1.1 "+tree)
+    tree
+  }
   def five(): Int = meta {
     q"5"
   }

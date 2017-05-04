@@ -139,6 +139,7 @@ class DefMacroTest extends TestSuite {
   test("constant quasiqoutes") {
     assert(trees.five() == 5)
     assert(trees.some3() == Some(3))
+    assert(trees.someExplicit3() == Some(3))
     assert(trees.pi() == Math.PI)
   }
 
