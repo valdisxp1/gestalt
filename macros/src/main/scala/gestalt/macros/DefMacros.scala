@@ -130,6 +130,19 @@ object trees {
     println(">>>1 "+tree)
     tree
   }
+
+  def namedIterator(): Iterator[Nothing] = meta {
+    val tree =
+      q"""class TrivialIterator[A] extends Iterator[A]{
+         def hasNext = false
+         def next() = ???
+       }
+
+        new TrivialIterator[Nothing]()
+        """
+    println(">>>1.3 "+tree)
+    tree
+  }
 }
 
 object Inheritance {
