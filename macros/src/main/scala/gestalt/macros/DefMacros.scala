@@ -119,7 +119,28 @@ object trees {
          def hasNext = false
          def next(): Nothing = ???
        }"""
-    println(">>> 1 "+tree)
+    /*
+    should be
+    New(Template(DefDef(<init>,List(),List(),TypeTree,EmptyTree),
+      List(AppliedTypeTree(Ident(Iterator),List(Ident(Nothing)))),
+       ValDef(_,EmptyTree,EmptyTree),List(DefDef(hasNext,List(),List(),TypeTree,Literal(Constant(false))),
+       DefDef(next,List(),List(List()),TypeTree,Ident(???)))
+    ))
+    */
+    println(">>>1 "+tree)
+    tree
+  }
+
+  def namedIterator(): Iterator[Nothing] = meta {
+    val tree =
+      q"""class TrivialIterator[A] extends Iterator[A]{
+         def hasNext = false
+         def next() = ???
+       }
+
+        new TrivialIterator[Nothing]()
+        """
+    println(">>>1.3 "+tree)
     tree
   }
 }
