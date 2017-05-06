@@ -115,9 +115,9 @@ object trees {
 
   def iterator(): Iterator[Nothing] = meta {
     val tree =
-      q"""new Iterator[Nothing]{
+      q"""new Iterator {
          def hasNext = false
-         def next() = ???
+         def next(): Nothing = ???
        }"""
     println(">>> 1 "+tree)
     tree

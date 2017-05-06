@@ -195,7 +195,7 @@ class DefMacroTest extends TestSuite {
   }
 
   test("create anonymous class") {
-//    assert(trees.iterator().hasNext == false)
+    assert(trees.iterator().hasNext == false)
 //    println(">>>2 "+TreeString(new Iterator[Nothing]{
 //      def hasNext = false
 //      def next() = ???
