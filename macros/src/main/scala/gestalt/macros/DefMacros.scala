@@ -148,6 +148,22 @@ object trees {
     */
   }
 
+  def abcdObject(): AnyRef = meta {
+    val tree =
+      q"""new Object {
+        override def toString = "abcd"
+      }"""
+    println(">>>1.4 "+tree)
+    tree
+    /*
+    should be
+    New(Template(DefDef(<init>,List(),List(),TypeTree,EmptyTree),List(Ident(Iterator)),
+     ValDef(_,EmptyTree,EmptyTree),List(DefDef(hasNext,List(),List(),TypeTree,Literal(Constant(false))),
+     DefDef(next,List(),List(List()),Ident(Nothing),Ident(???)))
+    ))
+    */
+  }
+
   /*def namedIterator(): Iterator[Nothing] = meta {
     val tree =
       q"""class TrivialIterator[A] extends Iterator[A]{
