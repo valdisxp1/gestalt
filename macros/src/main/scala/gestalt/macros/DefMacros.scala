@@ -131,23 +131,6 @@ object trees {
     tree
   }
 
-  def inferedInterator(): Iterator[Nothing] = meta {
-    val tree =
-      q"""new Iterator {
-         def hasNext = false
-         def next(): Nothing = ???
-       }"""
-    println(">>>1.3 "+tree)
-    tree
-    /*
-    should be
-    New(Template(DefDef(<init>,List(),List(),TypeTree,EmptyTree),List(Ident(Iterator)),
-     ValDef(_,EmptyTree,EmptyTree),List(DefDef(hasNext,List(),List(),TypeTree,Literal(Constant(false))),
-     DefDef(next,List(),List(List()),Ident(Nothing),Ident(???)))
-    ))
-    */
-  }
-
   def abcdObject(): AnyRef = meta {
     val tree =
       q"""new Object {
