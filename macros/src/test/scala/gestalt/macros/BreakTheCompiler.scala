@@ -1,11 +1,13 @@
 class Main {
-  runCode("abcde"){
-    case class Name(first: String, last: String)
-    val buzz = Some(Bees.Bee("buzz")).collect{
-      case Bees.Bee(value) => value
-    }
+  val buzz = Some(Bees.Bee("buzz")).collect {
+    case Bees.Bee(value) => value
   }
-  def runCode(comment: String)(code: => Unit) = code
+}
+
+object Main {
+  def main(args: Array[String]): Unit = {
+    new Main
+  }
 }
 
 object Bees {
