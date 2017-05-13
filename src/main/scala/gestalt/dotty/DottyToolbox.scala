@@ -980,6 +980,8 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
       case tp: Types.TypeProxy => denot(tp.underlying)
       case _ => None
     }
+
+    def toTree(tp: Type): Tree = tpd.TypeTree(tp)
   }
 
   object ByNameType extends ByNameTypeImpl {

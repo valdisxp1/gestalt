@@ -18,6 +18,7 @@ trait Types extends MethodTypes { self: Toolbox =>
     def show: String = Type.show(tp)
     def widen: Type = Type.widen(tp)
     def denot: Option[Denotation] = Type.denot(tp)
+    def toTree: TypeTree = Type.toTree(tp)
   }
 
   implicit class TreeTypeOps(tree: Tree) {
@@ -86,6 +87,9 @@ trait Types extends MethodTypes { self: Toolbox =>
 
     /** denotation associated with the type */
     def denot(tp: Type): Option[Denotation]
+
+    /** Turn a type into a typed tree */
+    def toTree(tp: Type): TypeTree
   }
 
 
