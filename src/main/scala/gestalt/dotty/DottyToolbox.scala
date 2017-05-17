@@ -1031,7 +1031,7 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
     }
 
     def unapply(tree: Tree): Option[tpd.Tree] = tree match {
-      case d.TypedSplice(tree) => Some(tree)
+      case typedSplice: d.TypedSplice => Some(typedSplice.tree)
       case _ => None
     }
   }

@@ -141,6 +141,7 @@ trait Trees extends Params with TypeParams with
   val NewInstance: NewInstanceImpl
   trait NewInstanceImpl {
     def apply(tpe: TypeTree, argss: Seq[Seq[TermTree]]): TermTree = {
+      println(">>>3"+ tpe + "class??" + tpe.getClass.getName)
       val PathType(qual, name, targs) = tpe
       apply(qual, name, targs, argss)
     }

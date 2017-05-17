@@ -24,16 +24,24 @@ object JsonMacros {
     */
   def format[T](): Format[T] = meta {
     import toolbox._
-    val tpe: Type = T.tpe
+    val ttt = T
+    val bwhaaah: tpd.Tree = ttt match {
+      case TypedSplice(tree) =>
+        println(">>>1 T:" +ttt + " tree: "+ tree)
+        tree
+      case t => t
+    }
+    println(">>>2 T:" +ttt + " tree: "+ bwhaaah + "class??" + bwhaaah.getClass.getCanonicalName)
+    val tpe: Type = ttt.tpe
     if (!tpe.isCaseClass) {
-      error("Not a case class", T.pos)
+      error("Not a case class", bwhaaah.pos)
       q"???"
     } else {
       val fields = tpe.caseFields
       val namesAndTypes = fields.map {
         f => f.name -> f.info
       }
-
+      println(">>>2.5 T:" +ttt + " tree: "+ bwhaaah + "class??" + bwhaaah.getClass.getCanonicalName)
       case class JsonItem(name: String, pairOut: TermTree, readOption: ValDef, implicitFormat: Option[ValDef])
       val jsonItems: Seq[JsonItem] = namesAndTypes.map {
         case (name, stringType) if stringType =:= Type.typeRef("java.lang.String") =>
@@ -51,7 +59,10 @@ object JsonMacros {
           )
       }
       val allDefined = q"${jsonItems.map(i => q"${Ident(i.name)}.isDefined").reduceLeft((a, b) => q"$a && $b")}"
-      val construction = NewInstance(T, Seq(jsonItems.map(i => q"${Ident(i.name)}.get")))
+      println(">>>2.6 T:" +ttt + " tree: "+ bwhaaah + "class??" + bwhaaah.getClass.getCanonicalName)
+      val args = jsonItems.map(i => q"${Ident(i.name)}.get")
+      println(">>>2.7 T:" +ttt + " tree: "+ bwhaaah + "class??" + bwhaaah.getClass.getCanonicalName)
+      val construction = NewInstance(bwhaaah, Seq(args))
       val fromJson =
         q"""json match{
               case obj: JsObject =>
@@ -63,9 +74,9 @@ object JsonMacros {
             }"""
       q"""
           import JsonMacros._
-          new Format[$T]{..${
+          new Format[$bwhaaah]{..${
         jsonItems.flatMap(_.implicitFormat).toList :+
-          q"def toJson(o: $T) = JsObject(Seq(..${jsonItems.map(_.pairOut)}))" :+
+          q"def toJson(o: $bwhaaah) = JsObject(Seq(..${jsonItems.map(_.pairOut)}))" :+
           q"def fromJson(json: JsValue) = $fromJson"
       }}
         """
