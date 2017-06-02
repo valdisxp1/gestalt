@@ -26,7 +26,9 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   type Mods = DottyModifiers
 
-  type Splice = d.Tree
+  type Splice = d.Tree with d.Literal with d.Ident
+  //=TypeTree with TermTree with DefTree with Lit with Ident
+  //?= d.Tree
   type Ident  = d.Ident
   type Lit    = d.Literal
 
