@@ -179,9 +179,11 @@ class Quote(args: List[Tree], isTerm: Boolean, enclosingTree: Tree) {
         case quasi: Quasi =>
           liftQuasi(quasi)
         case m.Term.Name(name) =>
-          Lit(name)
+          //TODO handle typed and untyped separately
+          Lit(name): Lit
         case m.Pat.Var.Term(m.Term.Name(name)) =>
-          Lit(name)
+          //TODO handle typed and untyped separately
+          Lit(name): Lit
         case pat =>
           isPatDef = true
           lift(pat)
@@ -205,8 +207,8 @@ class Quote(args: List[Tree], isTerm: Boolean, enclosingTree: Tree) {
 
         if (names.length != pats.length)
           error("Patterns not supported in seqence definition", enclosingTree.pos)
-
-        selectPath("SeqDef").appliedTo(mods, scalaList.appliedTo(names.map(Lit(_)) : _*), tpe, rhs)
+        //TODO handle typed and untyped separately
+        selectPath("SeqDef").appliedTo(mods, scalaList.appliedTo(names.map(Lit(_): Lit) : _*), tpe, rhs)
       }
     }
   }

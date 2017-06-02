@@ -534,7 +534,7 @@ trait ValDecls { this: Trees =>
 
 }
 
-trait DefDefs { this: Trees =>
+trait DefDefs { this: Trees with Types =>
 
   def DefDef: DefDefImpl
   trait DefDefImpl {

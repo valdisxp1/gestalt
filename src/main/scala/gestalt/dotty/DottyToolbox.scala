@@ -233,7 +233,7 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
     def apply(qual: Tree, name: String): TypeTree = d.Select(qual, name.toTypeName).withPosition
   }
 
-  object PathType extends PathTypeImpl {
+  object PathType {
     def apply(qual: Option[Tree], name: String, targs: List[TypeTree]) = {
       val select = if (qual.isEmpty) d.Ident(name.toTypeName) else d.Select(qual.get, name.toTypeName)
       if (targs.isEmpty) select else TypeApply(select, targs)
@@ -322,11 +322,11 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
               case tree: d.Ident => tree
               case tree => d.Block(Nil, tree)
             }
-            d.Thicket(Lit(part), expr)
+            d.Thicket(literal(part), expr)
           }
       val segments =
         if (parts.size > args.size)
-          thickets :+ Lit(parts.last)
+          thickets :+ literal(parts.last)
         else thickets
 
       d.InterpolatedString(prefix.toTermName, segments).withPosition
@@ -486,7 +486,7 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   // extractors
   object Lit extends LitImpl {
-    def apply(value: Any): Lit = d.Literal(Constant(value)).withPosition
+    def apply(value: Any) = literal(value)
 
     def apply(value: Any)(implicit c: Cap): tpd.Tree = t.Literal(Constant(value)).withPosition
 
@@ -497,6 +497,10 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
     def unapply(tree: tpd.Tree)(implicit c: Cap): Option[Any] =
       unapply(tree.asInstanceOf[Tree]).asInstanceOf[Option[Any]]
+  }
+
+  private def literal(value: Any) = {
+    d.Literal(Constant(value)).withPosition
   }
 
   object Ident extends IdentImpl {

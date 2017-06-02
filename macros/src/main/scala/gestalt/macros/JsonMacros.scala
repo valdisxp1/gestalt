@@ -29,6 +29,9 @@ object JsonMacros {
     val implicitlyTree = implicitlyType.toTree
     val formatType     = Type.typeRef("JsonMacros.Format")
     val formatTree     = formatType.toTree
+    val jsonStr = Ident(Type.termRef("JsonMacros.JsString").symbol.get)
+
+    def getImplicit(tp: Type): tpd.Tree = implicitlyTree.appliedToTypes(formatTree.appliedToTypes(tp.toTree))
 
     val tpe: Type = T.tpe
     if (!tpe.isCaseClass) {
@@ -39,12 +42,12 @@ object JsonMacros {
         f => f -> f.info
       }
 
-      case class JsonItem(name: String, value: Ident, pairOut: TermTree, readOption: ValDef, implicitFormat: Option[ValDef])
+      case class JsonItem(name: String, value: Ident, pairOut: tpd.Tree => tpd.Tree, readOption: ValDef, implicitFormat: Option[ValDef])
       val jsonItems: List[JsonItem] = fieldsWithTypes.map {
         case (field, stringType) if stringType =:= Type.typeRef("java.lang.String") =>
           val name = field.name
           JsonItem(name,
-            pairOut = Tuple(List(Lit(name), q"JsString(o.$name)")),
+            pairOut = o => Tuple(Lit(field.name)(cap) :: jsonStr.appliedTo(o.select(field.name)) :: Nil),
             value = Ident(name),
             readOption = q"val $name = obj.firstValue(${Lit(name)}).collect{case JsString(value) => value}",
             implicitFormat = None
@@ -54,7 +57,7 @@ object JsonMacros {
           val implFormaterName = name + "_formatter"
           val formatterIdent = Ident(implFormaterName)
           JsonItem(name,
-            pairOut = Tuple(List(Lit(name), q"$formatterIdent.toJson(o.$name)")),
+            pairOut = o => Tuple(Lit(field.name)(cap) :: getImplicit(tp).select("toJson").apliedTo(o.select(field.name))),
             value = Ident(name),
             readOption = q"val $name = obj.firstValue(${Lit(name)}).flatMap(x =>$formatterIdent.fromJson(x))",
             implicitFormat = Some(q"val $implFormaterName=implicitly[Format[${otherType.toTree}]]")
@@ -72,36 +75,26 @@ object JsonMacros {
               case other => None
             }"""
 
-      def isPrimitive(tp: Type): Boolean = tp =:= Type.typeRef("java.lang.String")
-      def getImplicit(tp: Type): tpd.Tree = implicitlyTree.appliedToTypes(formatTree.appliedToTypes(tp.toTree))
+      val toJson = DefDef("toJson", ("o", T.tpe) :: Nil) {
+        case List(o) =>
+          val values = jsonItems.map(_.pairOut(o))
 
-      val toJson = DefDef("toJson", ("o", T.tpe) :: Nil) { ids =>
-        val o = ids.head
-        val values = fieldsWithTypes.map {
-          case (field, tp) if isPrimitive(tp) =>
-            val jstr = Ident(Type.termRef("JsonMacros.JsString").symbol.get)
-            Tuple(Lit(field.name)(cap) :: jstr.appliedTo(o.select(field.name)) :: Nil)
-          case (field, tp) =>
-            Tuple(Lit(field.name)(cap) :: getImplicit(tp).select("toJson").apliedTo(o.select(field.name))
-        }
-
-        val jsonObject = Ident(Type.termRef("JsonMacros.JsObject.apply").symbol.get)
-        val scalaSeq = Ident(Type.termRef("scala.collection.immutable.Seq.apply").symbol.get)
-        val itemType = Type.typeRef("scala.Tuple2").appliedTo(
-          Type.typeRef("scala.String"),
-          Type.typeRef("JsonMacros.JsValue")
-        )
-        val seqLiteral = SeqLiteral(values, itemType)
-        jsonObject.appliedTo(scalaSeq.appliedToTypes(itemType.toTree).appliedTo(seqLiteral))
+          val jsonObject = Ident(Type.termRef("JsonMacros.JsObject.apply").symbol.get)
+          val scalaSeq = Ident(Type.termRef("scala.collection.immutable.Seq.apply").symbol.get)
+          val itemType = Type.typeRef("scala.Tuple2").appliedTo(
+            Type.typeRef("scala.String"),
+            Type.typeRef("JsonMacros.JsValue")
+          )
+          val seqLiteral = SeqLiteral(values, itemType)
+          jsonObject.appliedTo(scalaSeq.appliedToTypes(itemType.toTree).appliedTo(seqLiteral))
       }
 
-      val fromJson = DefDef("fromJson", ("json", Type.typeRef("JsValue")) :: Nil) { ids =>
-        val json = ids.head
+/*      val fromJson = DefDef("fromJson", ("json", Type.typeRef("JsValue")) :: Nil) {
+        case List(json) =>
+          ???
+      }*/
 
-        ???
-      }
-
-      val stats = List(implicits, toJson, fromJson)
+      val stats = jsonItems.flatMap(_.implicitFormat) +: List(toJson, fromJson)
 
       q"""
           import JsonMacros._
