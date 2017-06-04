@@ -26,11 +26,12 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   type Mods = DottyModifiers
 
-  type Splice = d.Tree with d.Literal with d.Ident
+  //TODO fix
+  type Splice = d.Tree //with d.Literal// with d.Ident
   //=TypeTree with TermTree with DefTree with Lit with Ident
   //?= d.Tree
-  type Ident  = d.Ident
-  type Lit    = d.Literal
+  type Ident  = d.Tree //d.Ident
+  type Lit    = d.Tree //d.Literal
 
   type Param = d.ValDef
   type TypeParam = d.TypeDef
@@ -501,7 +502,7 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
       unapply(tree.asInstanceOf[Tree]).asInstanceOf[Option[Any]]
   }
 
-  private def literal(value: Any) = {
+  private def literal(value: Any): Lit = {
     d.Literal(Constant(value)).withPosition
   }
 
@@ -674,7 +675,7 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
   object Tuple extends TupleImpl {
     def apply(args: List[TermTree]): TermTree = d.Tuple(args).withPosition
 
-    def apply(args: List[tpd.Tree]): tpd.Tree = ???
+    def apply(args: List[tpd.Tree])(implicit c: Cap): tpd.Tree = ???
 
     def unapply(tree: Tree): Option[List[TermTree]] = tree match {
       case d.Tuple(trees) => Some(trees)
