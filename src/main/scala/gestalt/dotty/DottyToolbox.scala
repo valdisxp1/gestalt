@@ -204,9 +204,11 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   // new qual.T[A, B](x, y)(z)
   object NewInstance extends NewInstanceImpl {
-    def apply(qual: Option[Tree], name: String, targs: List[TypeTree], argss: List[List[TermTree]]): TermTree = {
-      ApplySeq(d.Select(d.New(PathType(qual, name, targs)), nme.CONSTRUCTOR), argss).withPosition
+    def apply(qualOpt: Option[Tree], name: String, targs: List[TypeTree], argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree = {
+      ApplySeq(d.Select(d.New(PathType(qualOpt, name, targs)), nme.CONSTRUCTOR), argss).withPosition
     }
+
+    def apply(tp: Type, args: List[tpd.Tree]): tpd.Tree = t.New(tp, args)
   }
 
   object Self extends SelfImpl {
