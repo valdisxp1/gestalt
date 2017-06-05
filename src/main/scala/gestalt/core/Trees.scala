@@ -131,16 +131,13 @@ trait Trees extends Params with TypeParams with
 
   def NewInstance: NewInstanceImpl
   trait NewInstanceImpl {
-    def apply(tpe: TypeTree, argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree = {
-      val Trees.this.PathType(qualOpt, name, targs) = tpe
-        apply(qualOpt, name, targs, argss)
-    }
     def apply(qual: Option[Tree],
               name: String,
               targs: List[TypeTree],
               argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree
 
-    def apply(tp: Type, args: List[tpd.Tree]): tpd.Tree
+    def apply(tp: Type, argss: List[List[tpd.Tree]]): tpd.Tree
+    def apply(tp: Type, argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree
   }
 
   def SecondaryCtor: SecondaryCtorImpl

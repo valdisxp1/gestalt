@@ -208,7 +208,16 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
       ApplySeq(d.Select(d.New(PathType(qualOpt, name, targs)), nme.CONSTRUCTOR), argss).withPosition
     }
 
-    def apply(tp: Type, args: List[tpd.Tree]): tpd.Tree = t.New(tp, args)
+    def apply(tp: Type, argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree = {
+      ApplySeq(d.Select(d.New(Type.toTree(tp)), nme.CONSTRUCTOR), argss).withPosition
+    }
+
+    def apply(tp: Type, argss: List[List[tpd.Tree]]): tpd.Tree = {
+      argss match{
+        case head :: tail => tail.foldLeft[tpd.Tree](t.New(tp, head)) { (acc, args) => Apply(acc, args) }
+        case Nil => t.New(tp)
+      }
+    }
   }
 
   object Self extends SelfImpl {
