@@ -89,6 +89,15 @@ object JsonMacros {
     */
   def formatSafe[T](): Format[T] = meta {
     import scala.gestalt.options.unsafe
+
+    val jsonStr = Ident(Type.termRef("JsonMacros.JsString").symbol)
+
+    val formatType     = Type.typeRef("JsonMacros.Format")
+    val formatTree     = formatType.toTree
+    val implicitlyType = Type.termRef("implicitly")
+    val implicitlyTree = implicitlyType.toTree
+    def getImplicit(tp: Type): tpd.Tree = implicitlyTree.appliedToTypes(formatTree.appliedToTypes(tp.toTree))
+
     val tpe: Type = T.tpe
     if (!tpe.isCaseClass) {
       error("Not a case class", T.pos)
@@ -99,12 +108,12 @@ object JsonMacros {
         f => f -> f.info
       }
 
-      case class JsonItem(name: String, value: Ident, pairOut: TermTree, readOption: ValDef, implicitFormat: Option[ValDef])
+      case class JsonItem(name: String, value: Ident, pairOut: tpd.Tree => tpd.Tree, readOption: ValDef, implicitFormat: Option[ValDef])
       val jsonItems: List[JsonItem] = fieldsWithTypes.map {
         case (field, stringType) if stringType =:= Type.typeRef("java.lang.String") =>
           val name = field.name
           JsonItem(name,
-            pairOut = Tuple(List(Lit(name), q"JsString(o.$name)")),
+            pairOut = (o: tpd.Tree) => Tuple(Lit(field.name).typed :: jsonStr.appliedTo(o.select(field.name)) :: Nil),
             value = Ident(name),
             readOption = q"val $name = obj.firstValue(${Lit(name)}).collect{case JsString(value) => value}",
             implicitFormat = None
@@ -114,7 +123,7 @@ object JsonMacros {
           val implFormaterName = name + "_formatter"
           val formatterIdent = Ident(implFormaterName)
           JsonItem(name,
-            pairOut = Tuple(List(Lit(name), q"$formatterIdent.toJson(o.$name)")),
+            pairOut = (o: tpd.Tree) => Tuple(Lit(field.name).typed :: getImplicit(otherType).select("toJson").apliedTo(o.select(field.name))),
             value = Ident(name),
             readOption = q"val $name = obj.firstValue(${Lit(name)}).flatMap(x =>$formatterIdent.fromJson(x))",
             implicitFormat = Some(q"val $implFormaterName=implicitly[Format[${otherType.toTree}]]")
