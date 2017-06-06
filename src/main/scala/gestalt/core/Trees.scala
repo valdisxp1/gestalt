@@ -162,12 +162,6 @@ trait Trees extends Params with TypeParams with
     def apply(qual: Tree, name: String): TypeTree
   }
 
-  def PathType: PathTypeImpl
-  trait PathTypeImpl {
-    def apply(qual: Option[Tree], name: String, targs: List[TypeTree]): TypeTree
-    def unapply(tpe: TypeTree) : Option[(Option[Tree], String, List[TypeTree])]
-  }
-
   def TypeSingleton: TypeSingletonImpl
   trait TypeSingletonImpl {
     def apply(ref: Tree): TypeTree
