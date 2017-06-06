@@ -670,9 +670,8 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   object Tuple extends TupleImpl {
     def apply(args: List[TermTree]): TermTree = d.Tuple(args).withPosition
-
-    // TODO
-    def apply(args: List[tpd.Tree])(implicit c: Cap): tpd.Tree = ???
+    //TODO check
+    def apply(args: List[tpd.Tree])(implicit c: Cap): tpd.Tree = d.Tuple(args).withPosition
 
     def unapply(tree: Tree): Option[List[TermTree]] = tree match {
       case d.Tuple(trees) => Some(trees)
