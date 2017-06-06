@@ -486,6 +486,7 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
   // extractors
   object Lit extends LitImpl {
     def apply(value: Any): Lit = d.Literal(Constant(value)).withPosition
+
     def unapply(tree: Tree): Option[Any] = tree match {
       case c.Literal(Constant(v)) => Some(v)
       case _ => None
@@ -496,7 +497,7 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
     def assignType(tree: Lit): tpd.Tree = {
       tree match {
-        case lit: d.Literal => t.Literal(lit.const)
+        case lit: d.Literal => t.Literal(lit.const).withPosition
       }
     }
   }
@@ -669,6 +670,10 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   object Tuple extends TupleImpl {
     def apply(args: List[TermTree]): TermTree = d.Tuple(args).withPosition
+
+    // TODO
+    def apply(args: List[tpd.Tree])(implicit c: Cap): tpd.Tree = ???
+
     def unapply(tree: Tree): Option[List[TermTree]] = tree match {
       case d.Tuple(trees) => Some(trees)
       case _ => None

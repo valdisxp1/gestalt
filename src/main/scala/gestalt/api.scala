@@ -168,6 +168,10 @@ object api extends Toolbox {
     }
   }
 
+  implicit class UntypedLitOps(lit: Lit) {
+    def typed = Lit.assignType(lit)
+  }
+
   implicit def untypedLitToTyped(lit: Lit): tpd.Tree = Lit.assignType(lit)
 
   object tpd extends tpdImpl {

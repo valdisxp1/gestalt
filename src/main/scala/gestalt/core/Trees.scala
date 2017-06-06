@@ -447,6 +447,7 @@ trait Trees extends Params with TypeParams with
   def Tuple: TupleImpl
   trait TupleImpl {
     def apply(args: List[TermTree]): TermTree
+    def apply(args: List[tpd.Tree])(implicit c: Cap): tpd.Tree
     def unapply(tree: Tree): Option[List[TermTree]]
     def unapply(tree: tpd.Tree)(implicit c: Cap): Option[List[tpd.Tree]]
   }
