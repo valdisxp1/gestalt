@@ -93,6 +93,7 @@ object JsonMacros {
     val jsonStr = Ident(Type.termRef("JsonMacros.JsString").symbol)
 
     val formatType     = Type.typeRef("JsonMacros.Format")
+    val jsValueType     = Type.typeRef("JsonMacros.JsValue")
     val formatTree     = formatType.toTree
     val implicitlyType = Type.termRef("implicitly")
     val implicitlyTree = implicitlyType.toTree
@@ -123,7 +124,7 @@ object JsonMacros {
           val implFormaterName = name + "_formatter"
           val formatterIdent = Ident(implFormaterName)
           JsonItem(name,
-            pairOut = (o: tpd.Tree) => Tuple(Lit(field.name).typed :: getImplicit(otherType).select("toJson").apliedTo(o.select(field.name))),
+            pairOut = (o: tpd.Tree) => Tuple(Lit(field.name).typed :: getImplicit(otherType).select("toJson").appliedTo(o.select(field.name)) :: Nil),
             value = Ident(name),
             readOption = q"val $name = obj.firstValue(${Lit(name)}).flatMap(x =>$formatterIdent.fromJson(x))",
             implicitFormat = Some(q"val $implFormaterName=implicitly[Format[${otherType.toTree}]]")
@@ -140,11 +141,24 @@ object JsonMacros {
         }}
               case other => None
             }"""
+      val toJson = DefDef("toJson", ("o", tpe) :: Nil, jsValueType) {
+        case List(o) =>
+          val values = jsonItems.map(_.pairOut(o))
+
+          val jsonObject = Ident(Type.termRef("JsonMacros.JsObject.apply").symbol)
+          val scalaSeq = Ident(Type.termRef("scala.collection.immutable.Seq.apply").symbol)
+          val itemType = Type.typeRef("scala.Tuple2").appliedTo(
+            Type.typeRef("scala.String"),
+            jsValueType
+          )
+          val seqLiteral = SeqLiteral(values, itemType)
+          jsonObject.appliedTo(scalaSeq.appliedToTypes(itemType.toTree).appliedTo(seqLiteral))
+      }
       q"""
           import JsonMacros._
           new Format[$T]{..${
         jsonItems.flatMap(_.implicitFormat).toList :+
-          q"def toJson(o: $T) = JsObject(Seq(..${jsonItems.map(_.pairOut)}))" :+
+          toJson :+
           q"def fromJson(json: JsValue) = $fromJson"
       }}
         """
