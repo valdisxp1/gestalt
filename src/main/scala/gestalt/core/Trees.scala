@@ -335,6 +335,8 @@ trait Trees extends Params with TypeParams with
     def apply(value: Any): Lit
     def unapply(tree: Tree): Option[Any]
     def unapply(tree: tpd.Tree)(implicit c: Cap): Option[Any]
+
+    def assignType(tree: Lit): tpd.Tree
   }
 
   def Apply: ApplyImpl

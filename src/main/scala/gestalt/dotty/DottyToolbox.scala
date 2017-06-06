@@ -493,6 +493,12 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
     def unapply(tree: tpd.Tree)(implicit c: Cap): Option[Any] =
       unapply(tree.asInstanceOf[Tree]).asInstanceOf[Option[Any]]
+
+    def assignType(tree: Lit): tpd.Tree = {
+      tree match {
+        case lit: d.Literal => t.Literal(lit.const)
+      }
+    }
   }
 
   object Ident extends IdentImpl {

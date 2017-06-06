@@ -168,6 +168,8 @@ object api extends Toolbox {
     }
   }
 
+  implicit def untypedLitToTyped(lit: Lit): tpd.Tree = Lit.assignType(lit)
+
   object tpd extends tpdImpl {
     def typeOf(tree: Tree): Type = {
       val tb = toolbox
