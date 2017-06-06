@@ -133,7 +133,7 @@ object JsonMacros {
       val allDefined = q"${jsonItems.map(i => q"${i.value}.isDefined").reduceLeft((a, b) => q"$a && $b")}"
       val construction = NewInstance(tpe, List(jsonItems.map(i => q"${i.value}.get")))
       val fromJson =
-        q"""json match{
+        q"""def fromJson(json: JsValue) =  json match{
               case obj: JsObject =>
                {..${
           jsonItems.map(_.readOption) :+
@@ -153,13 +153,12 @@ object JsonMacros {
           )
           val seqLiteral = SeqLiteral(values, itemType)
           jsonObject.appliedTo(scalaSeq.appliedToTypes(itemType.toTree).appliedTo(seqLiteral))
-      }
+      }.wrap
       q"""
           import JsonMacros._
           new Format[$T]{..${
         jsonItems.flatMap(_.implicitFormat).toList :+
-          toJson :+
-          q"def fromJson(json: JsValue) = $fromJson"
+          toJson :+ fromJson
       }}
         """
     }
