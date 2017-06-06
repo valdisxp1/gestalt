@@ -209,7 +209,7 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
     }
 
     def apply(tp: Type, argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree = {
-      ApplySeq(d.Select(d.New(Type.toTree(tp)), nme.CONSTRUCTOR), argss).withPosition
+      ApplySeq(d.Select(d.New(TypedSplice(Type.toTree(tp))), nme.CONSTRUCTOR), argss).withPosition
     }
 
     def apply(tp: Type, argss: List[List[tpd.Tree]]): tpd.Tree = {
