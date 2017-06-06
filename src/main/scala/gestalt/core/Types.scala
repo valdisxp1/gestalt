@@ -63,15 +63,11 @@ trait Types extends MethodTypes { this: Toolbox =>
     /** The type representing  T[U1, ..., Un] */
     def appliedTo(tp: Type, args: List[Type]): Type
 
-    /** */
-//    def typeArgs: List[Type]
-
     /** Turn a type into a typed tree */
     def toTree(tp: Type): tpd.Tree
 
     /** Infer an implicit instance of the given type */
     def infer(tp: Type): Option[tpd.Tree]
-
   }
 
 
