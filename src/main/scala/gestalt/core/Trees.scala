@@ -534,6 +534,7 @@ trait DefDefs { this: Toolbox =>
   def DefDef: DefDefImpl
   trait DefDefImpl {
     def apply(mods: Mods, name: String, tparams: List[TypeParam], paramss: List[List[Param]], tpe: Option[TypeTree], rhs: Tree): DefDef
+    def apply(name: String, params: List[(String, Type)], resTp: Type)(bodyFn: List[tpd.Tree] => tpd.Tree): tpd.Tree
     def mods(tree: DefDef): Mods
     def tparams(tree: DefDef): List[TypeParam]
     def paramss(tree: DefDef): List[List[Param]]

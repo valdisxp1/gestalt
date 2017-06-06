@@ -949,6 +949,17 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
       d.DefDef(name.toTermName, tparams, paramss, tpe.getOrElse(d.TypeTree()), rhs).withMods(mods).withPosition
     }
 
+    def apply(name: String, params: List[(String, Type)], resTp: Type)(bodyFn: List[tpd.Tree] => tpd.Tree): tpd.Tree = {
+      val meth = ctx.newSymbol(
+        ctx.owner, name.toTermName,
+        Flags.Synthetic | Flags.Method,
+        Types.MethodType(params.map(_._1.toTermName), params.map(_._2), resTp)
+      )
+      t.DefDef(meth, paramss => {
+        ensureOwner(bodyFn(paramss.head), meth)
+      })
+    }
+
     def mods(tree: DefDef): Mods = new modsDeco(tree).mods
     def name(tree: DefDef): String = tree.name.show
     def tptOpt(tree: DefDef): Option[TypeTree] = if (tree.tpt.isInstanceOf[d.TypeTree]) None else Some(tree.tpt)
