@@ -1109,10 +1109,24 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
     def lub(tp1: Type, tp2: Type): Type = ctx.typeComparer.lub(tp1, tp2, false)
 
     /** returning a type referring to a type definition */
-    def typeRef(path: String): TypeRef = ctx.staticRef(path.toTypeName, false).symbol.typeRef
+    def typeRef(path: String): TypeRef ={
+      val denotation = ctx.staticRef(path.toTypeName, generateStubs = false)
+      if (denotation.exists) {
+        denotation.symbol.typeRef
+      } else {
+        throw new Exception(s"""Type ref does not exist for "$path" """)
+      }
+    }
 
     /** returning a type referring to a term definition */
-    def termRef(path: String): TermRef = ctx.staticRef(path.toTermName, false).symbol.termRef
+    def termRef(path: String): TermRef = {
+      val denotation = ctx.staticRef(path.toTermName, generateStubs = false)
+      if(denotation.exists) {
+        denotation.symbol.termRef
+      } else {
+        throw new Exception(s"""Term ref does not exist for "$path" """)
+      }
+    }
 
     def isCaseClass(tp: Type): Boolean = tp.classSymbol.is(Flags.Case)
 
