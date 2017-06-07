@@ -56,7 +56,7 @@ object JsonMacros {
           )
       }
       val allDefined = q"${jsonItems.map(i => q"${i.value}.isDefined").reduceLeft((a, b) => q"$a && $b")}"
-      val construction = NewInstance(tpe, List(jsonItems.map(i => q"${i.value}.get")))
+      val construction = NewInstance(T, List(jsonItems.map(i => q"${i.value}.get")))
       val fromJson =
         q"""json match{
               case obj: JsObject =>

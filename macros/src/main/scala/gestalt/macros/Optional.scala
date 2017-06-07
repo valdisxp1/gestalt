@@ -33,7 +33,7 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
       q"""
        $tempValDef
        if ($tempIdent.isEmpty) new Optional(null)
-       else new Optional($newBody)
+       else new Optional(${newBody.wrap})
      """
     }
   }

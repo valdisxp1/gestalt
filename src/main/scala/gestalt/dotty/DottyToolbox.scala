@@ -202,18 +202,12 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   // new qual.T[A, B](x, y)(z)
   object NewInstance extends NewInstanceImpl {
-    def apply(qualOpt: Option[Tree], name: String, targs: List[TypeTree], argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree = {
-      val select = if (qualOpt.isEmpty) d.Ident(name.toTypeName) else d.Select(qualOpt.get, name.toTypeName)
-      val pathType = if (targs.isEmpty) select else TypeApply(select, targs)
-      ApplySeq(d.Select(d.New(pathType), nme.CONSTRUCTOR), argss).withPosition
-    }
-
-    def apply(tp: Type, argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree = {
-      ApplySeq(d.Select(d.New(TypedSplice(Type.toTree(tp))), nme.CONSTRUCTOR), argss).withPosition
+    def apply(typeTree: TypeTree, argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree = {
+      ApplySeq(d.Select(d.New(typeTree), nme.CONSTRUCTOR), argss).withPosition
     }
 
     def apply(tp: Type, argss: List[List[tpd.Tree]]): tpd.Tree = {
-      argss match{
+      argss match {
         case head :: tail => tail.foldLeft[tpd.Tree](t.New(tp, head)) { (acc, args) => Apply(acc, args) }
         case Nil => t.New(tp)
       }
