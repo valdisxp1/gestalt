@@ -126,7 +126,7 @@ trait Trees extends Params with TypeParams with
   trait NewInstanceImpl {
     def apply(typeTree: TypeTree, argss: List[List[TermTree]]): TermTree
 
-    def apply(tp: Type, argss: List[List[tpd.Tree]]): tpd.Tree
+    def apply(tp: Type, argss: List[List[tpd.Tree]])(implicit cap: Dummy): tpd.Tree
   }
 
   def SecondaryCtor: SecondaryCtorImpl
