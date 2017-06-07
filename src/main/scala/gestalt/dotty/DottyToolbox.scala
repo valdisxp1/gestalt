@@ -202,11 +202,11 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   // new qual.T[A, B](x, y)(z)
   object NewInstance extends NewInstanceImpl {
-    def apply(typeTree: TypeTree, argss: List[List[TermTree]])(implicit unsafe: Unsafe): TermTree = {
+    def apply(typeTree: TypeTree, argss: List[List[TermTree]]): TermTree = {
       ApplySeq(d.Select(d.New(typeTree), nme.CONSTRUCTOR), argss).withPosition
     }
 
-    def apply(tp: Type, argss: List[List[tpd.Tree]]): tpd.Tree = {
+    def apply(tp: Type, argss: List[List[tpd.Tree]])(implicit cap: Dummy): tpd.Tree = {
       argss match {
         case head :: tail => tail.foldLeft[tpd.Tree](t.New(tp, head)) { (acc, args) => Apply(acc, args) }
         case Nil => t.New(tp)
