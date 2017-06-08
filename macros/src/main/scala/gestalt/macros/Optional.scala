@@ -28,14 +28,16 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
         Select(tempIdent, "value")
     }
 
-    {
-      import scala.gestalt.options.unsafe
-      q"""
+    val optionalType = Type.typeRef("Optional")
+    val optionalTree = optionalType.toTree
+    val newNull = NewInstance(optionalTree, List(List(Lit(null))))
+    val newFull = NewInstance(optionalTree, List(List(newBody.wrap)))
+
+    q"""
        $tempValDef
-       if ($tempIdent.isEmpty) new Optional(null)
-       else new Optional(${newBody.wrap})
+       if ($tempIdent.isEmpty) $newNull
+       else $newFull
      """
-    }
   }
 
   override def toString = if (isEmpty) "<empty>" else s"$value"
