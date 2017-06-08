@@ -98,6 +98,8 @@ object JsonMacros {
     val formatTree     = formatType.toTree
     val implicitlyType = Type.termRef("scala.Predef.implicitly")
     val implicitlyTree = implicitlyType.toTree
+    //implicitly[Format[${tp.toTree}]]
+    println(">>> format tree: "+formatTree)
     def getImplicit(tp: Type): tpd.Tree = implicitlyTree.appliedToTypes(formatTree.appliedToTypes(tp.toTree))
 
     val tpe: Type = T.tpe
@@ -110,7 +112,7 @@ object JsonMacros {
         f => f -> f.info
       }
 
-      case class JsonItem(name: String, value: Ident, pairOut: tpd.Tree => tpd.Tree, readOption: ValDef, implicitFormat: Option[ValDef])
+      case class JsonItem(name: String, value: Ident, pairOut: tpd.Tree => tpd.Tree, readOption: ValDef, implicitFormat: Option[tpd.ValDef])
       val jsonItems: List[JsonItem] = fieldsWithTypes.map {
         case (field, theType) if theType =:= stringType =>
           val name = field.name
@@ -122,13 +124,13 @@ object JsonMacros {
           )
         case (field, otherType) =>
           val name = field.name
-          val implFormaterName = name + "_formatter"
-          val formatterIdent = Ident(implFormaterName)
+          val implicitFormat: tpd.ValDef = ValDef(name + "_formatter", getImplicit(otherType))
+          val formatterIdent = Ident(ValDef.symbol(implicitFormat))
           JsonItem(name,
-            pairOut = (o: tpd.Tree) => Tuple(Lit(field.name).typed :: getImplicit(otherType).select("toJson").appliedTo(o.select(field.name)) :: Nil),
+            pairOut = (o: tpd.Tree) => Tuple(Lit(field.name).typed :: formatterIdent.select("toJson").appliedTo(o.select(field.name)) :: Nil),
             value = Ident(name),
-            readOption = q"val $name = obj.firstValue(${Lit(name)}).flatMap(x =>$formatterIdent.fromJson(x))",
-            implicitFormat = Some(q"val $implFormaterName=implicitly[Format[${otherType.toTree}]]")
+            readOption = q"val $name = obj.firstValue(${Lit(name)}).flatMap(x =>${formatterIdent.wrap}.fromJson(x))",
+            implicitFormat = Some(implicitFormat)
           )
       }
       val allDefined = q"${jsonItems.map(i => q"${i.value}.isDefined").reduceLeft((a, b) => q"$a && $b")}"
@@ -159,7 +161,7 @@ object JsonMacros {
       q"""
           import JsonMacros._
           new Format[$T]{..${
-        jsonItems.flatMap(_.implicitFormat).toList :+
+        jsonItems.flatMap(_.implicitFormat).map(_.wrap).toList :+
           toJson :+ fromJson
       }}
         """
