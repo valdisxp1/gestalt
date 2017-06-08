@@ -90,7 +90,7 @@ object JsonMacros {
   def formatSafe[T](): Format[T] = meta {
     import scala.gestalt.options.unsafe
 
-    val jsonStr = Type.termRef("<empty>.JsonMacros.JsString").toTree
+    val jsonStr = Type.typeRef("<empty>.JsonMacros.JsString").companion.get.toTree.select("apply")
     val stringType = Type.typeRef("java.lang.String")
 
     val formatType     = Type.typeRef("<empty>.JsonMacros.Format")
@@ -112,7 +112,7 @@ object JsonMacros {
 
       case class JsonItem(name: String, value: Ident, pairOut: tpd.Tree => tpd.Tree, readOption: ValDef, implicitFormat: Option[ValDef])
       val jsonItems: List[JsonItem] = fieldsWithTypes.map {
-        case (field, stringType) if stringType =:= stringType =>
+        case (field, theType) if theType =:= stringType =>
           val name = field.name
           JsonItem(name,
             pairOut = (o: tpd.Tree) => Tuple(Lit(field.name).typed :: jsonStr.appliedTo(o.select(field.name)) :: Nil),
@@ -146,8 +146,8 @@ object JsonMacros {
         case List(o) =>
           val values = jsonItems.map(_.pairOut(o))
 
-          val jsonObject = Type.termRef("<empty>.JsonMacros.JsObject").toTree
-          val scalaSeq = Type.termRef("scala.collection.immutable.Seq").toTree
+          val jsonObject = Type.typeRef("<empty>.JsonMacros.JsObject").companion.get.toTree.select("apply")
+          val scalaSeq = Type.typeRef("scala.collection.immutable.Seq").companion.get.toTree.select("apply")
 
           val itemType = Type.typeRef("scala.Tuple2").appliedTo(
             stringType,
