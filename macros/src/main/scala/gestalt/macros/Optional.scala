@@ -28,7 +28,8 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
         Select(tempIdent, "value")
     }
 
-    val optionalTree = Type.typeRef("Optional").toTree
+    val optionalType = Type.typeRef("Optional")
+    val optionalTree = optionalType.toTree
     val newNull = NewInstance(optionalTree, List(List(Lit(null))))
     val newFull = NewInstance(optionalTree, List(List(newBody.wrap)))
 
