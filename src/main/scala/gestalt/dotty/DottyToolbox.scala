@@ -488,9 +488,8 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
       unapply(tree.asInstanceOf[Tree]).asInstanceOf[Option[Any]]
 
     def assignType(tree: Lit): tpd.Tree = {
-      tree match {
-        case lit: d.Literal => t.Literal(lit.const).withPosition
-      }
+      val lit = tree.asInstanceOf[c.Literal[_]]
+      t.Literal(lit.const).withPosition
     }
   }
 
