@@ -661,8 +661,15 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
 
   object Tuple extends TupleImpl {
     def apply(args: List[TermTree]): TermTree = d.Tuple(args).withPosition
-    //TODO check
-    def apply(args: List[tpd.Tree])(implicit c: Dummy): tpd.Tree = d.Tuple(args).withPosition
+    def apply(ts: List[tpd.Tree])(implicit c: Dummy): tpd.Tree = {
+        val arity = ts.length
+        def tupleTypeRef: TypeRef = Type.typeRef("scala.Tuple"+arity)
+        /*if (arity > Definitions.MaxTupleArity) {
+          error(TupleTooLong(ts), tree.pos)
+          Definitions.unitLiteral
+        } else */if (arity == 1) ts.head
+        else t.AppliedTypeTree(t.TypeTree(tupleTypeRef), ts).withPosition
+    }
 
     def unapply(tree: Tree): Option[List[TermTree]] = tree match {
       case d.Tuple(trees) => Some(trees)
