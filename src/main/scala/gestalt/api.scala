@@ -51,7 +51,7 @@ object api extends Toolbox {
    *  `scala.gestalt.options.unsafe` is imported.
    */
   def root: TermTree = Ident("_root_")
-  def noPackage: TermTree = Ident("_no_package_")
+  def empty: TermTree = Ident("_empty_")
 
   def Ident(name: "_root_"): TermTree = {
     import options.unsafe
@@ -68,7 +68,7 @@ object api extends Toolbox {
     Ident.apply("java")
   }
 
-  def Ident(name: "_no_package_")(implicit dummy: Dummy2): TermTree = {
+  def Ident(name: "_empty_")(implicit dummy: Dummy2): TermTree = {
     import options.unsafe
     Ident.apply("<empty>")
   }
@@ -178,12 +178,6 @@ object api extends Toolbox {
       }
     }
   }
-
-  implicit class UntypedLitOps(lit: Lit) {
-    def typed = Lit.assignType(lit)
-  }
-
-  implicit def untypedLitToTyped(lit: Lit): tpd.Tree = Lit.assignType(lit)
 
   object tpd extends tpdImpl {
     def typeOf(tree: Tree): Type = {

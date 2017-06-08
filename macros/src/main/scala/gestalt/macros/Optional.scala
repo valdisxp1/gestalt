@@ -28,10 +28,10 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
         Select(tempIdent, "value")
     }
 
-      q"""
+    q"""
        $tempValDef
-       if ($tempIdent.isEmpty) new _no_package_.Optional(null)
-       else new _no_package_.Optional(${newBody.wrap})
+       if ($tempIdent.isEmpty) new _empty_.Optional(null)
+       else new _empty_.Optional(${newBody.wrap})
      """
   }
 
