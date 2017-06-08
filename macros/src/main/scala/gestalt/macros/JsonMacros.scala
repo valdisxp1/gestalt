@@ -90,12 +90,12 @@ object JsonMacros {
   def formatSafe[T](): Format[T] = meta {
     import scala.gestalt.options.unsafe
 
-    val jsonStr = Ident(Type.termRef("JsonMacros.JsString").symbol)
+    val jsonStr = Type.termRef("<empty>.JsonMacros.JsString").toTree
 
-    val formatType     = Type.typeRef("JsonMacros.Format")
-    val jsValueType     = Type.typeRef("JsonMacros.JsValue")
+    val formatType     = Type.typeRef("<empty>.JsonMacros.Format")
+    val jsValueType     = Type.typeRef("<empty>.JsonMacros.JsValue")
     val formatTree     = formatType.toTree
-    val implicitlyType = Type.termRef("implicitly")
+    val implicitlyType = Type.termRef("scala.Predef.implicitly")
     val implicitlyTree = implicitlyType.toTree
     def getImplicit(tp: Type): tpd.Tree = implicitlyTree.appliedToTypes(formatTree.appliedToTypes(tp.toTree))
 
