@@ -91,6 +91,7 @@ object JsonMacros {
     import scala.gestalt.options.unsafe
 
     val jsonStr = Type.termRef("<empty>.JsonMacros.JsString").toTree
+    val stringType = Type.typeRef("java.lang.String")
 
     val formatType     = Type.typeRef("<empty>.JsonMacros.Format")
     val jsValueType     = Type.typeRef("<empty>.JsonMacros.JsValue")
@@ -111,7 +112,7 @@ object JsonMacros {
 
       case class JsonItem(name: String, value: Ident, pairOut: tpd.Tree => tpd.Tree, readOption: ValDef, implicitFormat: Option[ValDef])
       val jsonItems: List[JsonItem] = fieldsWithTypes.map {
-        case (field, stringType) if stringType =:= Type.typeRef("java.lang.String") =>
+        case (field, stringType) if stringType =:= stringType =>
           val name = field.name
           JsonItem(name,
             pairOut = (o: tpd.Tree) => Tuple(Lit(field.name).typed :: jsonStr.appliedTo(o.select(field.name)) :: Nil),
@@ -145,10 +146,11 @@ object JsonMacros {
         case List(o) =>
           val values = jsonItems.map(_.pairOut(o))
 
-          val jsonObject = Ident(Type.termRef("JsonMacros.JsObject.apply").symbol)
-          val scalaSeq = Ident(Type.termRef("scala.collection.immutable.Seq.apply").symbol)
+          val jsonObject = Type.termRef("<empty>.JsonMacros.JsObject").toTree
+          val scalaSeq = Type.termRef("scala.collection.immutable.Seq").toTree
+
           val itemType = Type.typeRef("scala.Tuple2").appliedTo(
-            Type.typeRef("scala.String"),
+            stringType,
             jsValueType
           )
           val seqLiteral = SeqLiteral(values, itemType)
