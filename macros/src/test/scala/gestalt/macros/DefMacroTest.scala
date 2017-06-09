@@ -172,12 +172,6 @@ class DefMacroTest extends TestSuite {
     assert(implicitly[Some[String]] == Some("test"))
   }
 
-  test("location") {
-    import Locations._
-    val line = currentLine()
-    assert(line == 176) // starts from 0
-  }
-
   test("case info") {
     import CaseInfo._
     case class Student(name: String, age: Int)
