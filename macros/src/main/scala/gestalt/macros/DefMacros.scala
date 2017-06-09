@@ -146,6 +146,10 @@ object trees {
          case 3 => "three"
          }"""
   }
+
+  def typedTuple(): (String, Int) = meta {
+    Tuple(List(Lit.typed("abc"), Lit.typed(42)))
+  }
 }
 
 object Inheritance {

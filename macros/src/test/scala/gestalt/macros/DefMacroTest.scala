@@ -145,6 +145,7 @@ class DefMacroTest extends TestSuite {
     assert(trees.five() == 5)
     assert(trees.some3() == Some(3))
     assert(trees.pi() == Math.PI)
+    assert(trees.typedTuple() == ("abc", 42))
   }
 
   test("nested method inside macro def") {
