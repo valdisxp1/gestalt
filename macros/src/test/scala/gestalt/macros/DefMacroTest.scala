@@ -127,6 +127,7 @@ class DefMacroTest extends TestSuite {
 
   test("def with type parameters") {
     assert(scope.is[String]("hello"))
+    assert(scope.is[JsonMacros.Format[String]](null))
     assert(!scope.both[String, List[Int]]("hello"))
   }
 
@@ -145,6 +146,11 @@ class DefMacroTest extends TestSuite {
     assert(trees.five() == 5)
     assert(trees.some3() == Some(3))
     assert(trees.pi() == Math.PI)
+
+    trees.ident(new Iterator[String]{
+      def hasNext = false
+      def next() = ???
+    })
   }
 
   test("nested method inside macro def") {

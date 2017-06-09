@@ -2,7 +2,8 @@ class JsonMacroTest extends TestSuite {
   test("simple case class"){
     case class Name(first: String, last: String)
     val format = JsonMacros.format[Name]()
-    val formatSafe = JsonMacros.formatSafe[Name]()
+//    val formatSafe = format
+    val formatSafe =  JsonMacros.formatSafe[Name]()
 
     import JsonMacros._
     val expectedJohnSmith = JsObject(Seq(
@@ -39,7 +40,7 @@ class JsonMacroTest extends TestSuite {
     assert(registrationFormat.fromJson(registrationFormat.toJson(registration)) == Some(registration))
   }
 
-  test("composition test safe"){
+/*  test("composition test safe"){
     case class Name(first: String, last: String)
     case class Registration(name: Name, email: String)
 
@@ -57,5 +58,5 @@ class JsonMacroTest extends TestSuite {
     )
     assert(registrationFormat.toJson(registration) == expectedJson)
     assert(registrationFormat.fromJson(registrationFormat.toJson(registration)) == Some(registration))
-  }
+  }*/
 }

@@ -81,6 +81,7 @@ object ImplicitBigInt {
 
 object scope {
   def is[T](a: Any): Boolean = meta {
+    println(">>> is "+ a + " instance of " +T)
     q"$a.isInstanceOf[$T]"
   }
 
@@ -112,6 +113,7 @@ object trees {
     q"Math.PI"
   }
   def ident(a: Any): Any = meta {
+    println(">>> " + a)
     q"$a"
   }
 
