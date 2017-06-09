@@ -112,6 +112,7 @@ object trees {
     q"Math.PI"
   }
   def ident(a: Any): Any = meta {
+    println(">>>1 "+a)
     q"$a"
   }
 
@@ -148,7 +149,9 @@ object trees {
   }
 
   def typedTuple(): (String, Int) = meta {
-    Tuple(List(Lit.typed("abc"), Lit.typed(42)))
+    val res: Tree = Tuple(List(Lit.typed("abc"), Lit.typed(42)))
+    println(">>>2 " + res)
+    res
   }
 }
 

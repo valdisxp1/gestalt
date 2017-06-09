@@ -145,6 +145,7 @@ class DefMacroTest extends TestSuite {
     assert(trees.five() == 5)
     assert(trees.some3() == Some(3))
     assert(trees.pi() == Math.PI)
+    trees.ident(("abc", 42))
     assert(trees.typedTuple() == ("abc", 42))
   }
 
