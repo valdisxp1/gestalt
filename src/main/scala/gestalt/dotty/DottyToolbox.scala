@@ -483,6 +483,8 @@ class Toolbox(enclosingPosition: Position)(implicit ctx: Context) extends Tbox {
       case _ => None
     }
 
+    def typed(value: Any): tpd.Tree = t.Literal(Constant(value)).withPosition
+
     def unapply(tree: tpd.Tree)(implicit c: Dummy): Option[Any] =
       unapply(tree.asInstanceOf[Tree]).asInstanceOf[Option[Any]]
   }
